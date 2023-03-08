@@ -1,5 +1,7 @@
 # node-todo-cicd
 
+Do checkout the [Blog] on hashnode (https://devopscommunity.hashnode.dev/deploy-a-nodejs-app-using-jenkins-on-aws-ec2-instances)
+
 Run these commands:
 
 
@@ -18,4 +20,4 @@ Run these commands:
 # Workflow of the project
 <img width="615" alt="Screenshot 2023-02-24 at 6 22 42 PM" src="https://user-images.githubusercontent.com/97302447/221183576-20e1f18a-9396-4ba1-ba28-282aeb624144.png">
 
-Blogs will be published soon
+
