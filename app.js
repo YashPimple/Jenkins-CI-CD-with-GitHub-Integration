@@ -3,7 +3,7 @@ const express = require('express'),
     // In order to use PUT HTTP verb to edit item
     methodOverride = require('method-override'),
     // Mitigate XSS using sanitizer
-    sanitizer = require('sanitizer'),
+     sanitizer = require('sanitizer'),
     app = express(),
     port = 8000
 
