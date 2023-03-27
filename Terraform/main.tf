@@ -62,7 +62,7 @@ resource "aws_route_table_association" "table-group" {
 resource "aws_security_group" "allow_web" {
   name = "allow-web_traffic"
   description = "Allow TLS inbound traffic"
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.cloud1.id
 
   ingress {
     description = "HTTPS web traffic"
@@ -100,7 +100,7 @@ resource "aws_security_group" "allow_web" {
 
 resource "aws_network_interface" "devOps-server" {
   subnet_id = aws_subnet.prod_subnet.id
-  security_groups = [aws_security_group.devOps-server.id]
+  security_groups = [aws_security_group.allow_web.id]
   private_ip = "10.0.1.50"
 }
 
