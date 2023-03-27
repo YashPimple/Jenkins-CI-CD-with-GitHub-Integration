@@ -108,7 +108,7 @@ resource "aws_instance" "EC2_instance" {
     ami = "ami-02a2700d37baeef8b"
     instance_type = "t2.micro"
     key_name = "terraform-project"
-    subnet_id = aws_subnet.prod_subnet.id
+    #subnet_id = aws_subnet.prod_subnet.id since we are using network_interface
 
     network_interface {
       device_index = 0
@@ -116,7 +116,7 @@ resource "aws_instance" "EC2_instance" {
     }
 
     # Assign a public IP address to the instance
-    associate_public_ip_address = true
+    #associate_public_ip_address = true
 
     tags = {
       Name = "EC2_instance"
@@ -128,4 +128,19 @@ resource "aws_instance" "EC2_instance" {
                 sudo apt-get install docker.io -y
                 sudo usermod -aG docker $USER && newgrp docker
                 EOF
+}
+
+resource "aws_eip" "eip" {
+  vpc = true
+
+  tags = {
+    Name = "eip"
+  }  
+}
+
+# The aws_eip_association resource in Terraform is used to associate an Elastic IP address with an EC2 instance or a network interface
+resource "aws_eip_association" "eip_association" {
+  instance_id = aws_instance.EC2_instance.id
+  allocation_id = aws_eip.eip.id
+  network_interface_id = aws_network_interface.devOps-server.id
 }
