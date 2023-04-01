@@ -1,12 +1,10 @@
-# node-todo-cicd
+## Node-todo-cicd
 
 Do checkout the [Blog](https://devopscommunity.hashnode.dev/deploy-a-nodejs-app-using-jenkins-on-aws-ec2-instances) on hashnode 
 
 Run these commands:
 
-
 `sudo apt install nodejs`
-
 
 `sudo apt install npm`
 
