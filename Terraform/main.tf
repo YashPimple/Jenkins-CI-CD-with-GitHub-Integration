@@ -1,15 +1,16 @@
-# terraform {
-#   required_providers {
-#      aws = {
-#       source  = "hashicorp/aws"
-#       version = "~> 3.0"
-#     }
-#   }
-# }
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 4.0"
+    }
+  }
+}
+
 provider "aws" {
     region = "ap-northeast-1"
     access_key = "<user_access_key>"
-    secret_key = "<user_secret_key>"
+    secret_key = "<user_secret_key"
   
 }
 
@@ -47,7 +48,7 @@ resource "aws_route_table" "tables" {
 resource "aws_subnet" "prod_subnet" {
    vpc_id = aws_vpc.cloud1.id
    cidr_block = "10.0.0.0/24"
-
+   map_public_ip_on_launch = true
    tags = {
      Name = "prod_subnet"
    }
@@ -66,22 +67,22 @@ resource "aws_security_group" "allow_web" {
 
   ingress {
     description = "HTTPS web traffic"
-    from_port = 443
-    to_port = 443
+    from_port = 8080
+    to_port = 8080
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
-    description = "SSH web traffic"
-    from_port = 2
-    to_port = 2
+    description = "TLS from VPC"
+    from_port = 22
+    to_port = 22
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
   ingress {
     description = "HTTP web traffic"
-    from_port = 80
-    to_port = 80
+    from_port = 8000
+    to_port = 8000
     protocol = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -97,27 +98,24 @@ resource "aws_security_group" "allow_web" {
         Name = "allow_web"
     }
 }
-
-resource "aws_network_interface" "devOps-server" {
-  subnet_id = aws_subnet.prod_subnet.id
-  security_groups = [aws_security_group.allow_web.id]
-  private_ip = "10.0.1.50"
-}
-
 resource "aws_instance" "EC2_instance" {
-    ami = "ami-02a2700d37baeef8b"
+    ami = "ami-0d979355d03fa2522"
     instance_type = "t2.micro"
     key_name = "terraform-project"
-    #subnet_id = aws_subnet.prod_subnet.id since we are using network_interface
+    subnet_id = aws_subnet.prod_subnet.id
+    vpc_security_group_ids = [ aws_security_group.allow_web.id ]
 
-    network_interface {
-      device_index = 0
-      network_interface_id = aws_network_interface.devOps-server.id
-    }
+  connection {
+  type = "ssh"
+  host = self.public-ip
+  user = EC2_user
+  private_key = file("./terraform-project.pem") #add your .pem file path
 
-    # Assign a public IP address to the instance
-    #associate_public_ip_address = true
-
+  tags = {
+    Name = "Web -server"
+  }
+  }
+  
     tags = {
       Name = "EC2_instance"
     }
@@ -125,12 +123,13 @@ resource "aws_instance" "EC2_instance" {
     user_data = <<-EOF
                 #!/bin/bash
                 sudo apt-get update
-                sudo apt-get install docker.io -y
-                sudo usermod -aG docker $USER && newgrp docker
                 EOF
 }
 
+
+
 resource "aws_eip" "eip" {
+  instance = aws_instance.EC2_instance.id
   vpc = true
 
   tags = {
@@ -138,9 +137,6 @@ resource "aws_eip" "eip" {
   }  
 }
 
-# The aws_eip_association resource in Terraform is used to associate an Elastic IP address with an EC2 instance or a network interface
-resource "aws_eip_association" "eip_association" {
-  instance_id = aws_instance.EC2_instance.id
-  allocation_id = aws_eip.eip.id
-  network_interface_id = aws_network_interface.devOps-server.id
+output "instance_ip_addr" {
+  value = aws_instance.EC2_instance.private_ip
 }
