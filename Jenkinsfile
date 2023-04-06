@@ -1,3 +1,5 @@
+//declarative pipeline
+
 pipeline{
   stages{
     stage('Clone'){
