@@ -1,13 +1,6 @@
 version: 2.1
 
 jobs:
-  build:
-    docker:
-      - image: node:14.17.0
-    steps:
-      - checkout
-      - run: npm install
-      - run: node app.js
   deploy:
     docker:
       - image: docker:20.10.7
@@ -23,8 +16,6 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - build
       - deploy:
-          requires:
-            - build
+          
     
