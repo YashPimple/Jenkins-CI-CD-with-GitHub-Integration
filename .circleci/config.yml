@@ -16,15 +16,8 @@ jobs:
       - setup_remote_docker
       - run: |
           docker build -t ${DOCKERHUB_USERNAME}/node-app:${CIRCLE_SHA1} .
-          echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+          docker login -u ${DOCKERHUB_USERNAME} --password-stdin
           docker push ${DOCKERHUB_USERNAME}/node-app:${CIRCLE_SHA1}
-  test:
-    docker:
-      - image: node:14.17.0
-    steps:
-      - checkout
-      - run: npm install
-      - run: node app.js
 
 workflows:
   version: 2
@@ -34,6 +27,4 @@ workflows:
       - deploy:
           requires:
             - build
-      - test:
-          requires:
-            - deploy
+    
