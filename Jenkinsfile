@@ -50,10 +50,16 @@ pipeline {
         }    */
     }
 
-//    post {
-  //      always {
+    post {
+      always {
             // Cleanup or additional steps that should be executed regardless of the build result
-    //    }
-    //}
+               cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
+    }
 }
 
