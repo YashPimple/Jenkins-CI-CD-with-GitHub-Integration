@@ -8,7 +8,7 @@ pipeline {
     environment {
      DOCKERHUB_CREDENTIALS = credentials('dockerhub')
      SSH_CREDENTIALS = credentials('ssh_into_ec2')
-     EC2_INSTANCE_IP = '54.224.187.46'
+     EC2_INSTANCE_IP = '54.234.74.127'
     }
      stages {
         stage('Checkout') {
