@@ -50,10 +50,10 @@ pipeline {
         }    */
     }
 
-    post {
-        always {
+//    post {
+  //      always {
             // Cleanup or additional steps that should be executed regardless of the build result
-        }
-    }
+    //    }
+    //}
 }
 
