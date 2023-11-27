@@ -109,5 +109,5 @@ pipeline {
                       body: "The build of ${env.JOB_NAME} ${env.BUILD_NUMBER} has failed.\n\nConsole Output:\n${Jenkins.instance.getItem(env.JOB_NAME).getBuildByNumber(env.BUILD_NUMBER).getLog(100)}",
                       to: EMAIL_RECIPIENTS
         }
+   }
 }
-
