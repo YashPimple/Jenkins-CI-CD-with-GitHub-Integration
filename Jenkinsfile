@@ -59,7 +59,7 @@ pipeline {
             }
         }
 
-     /*   stage('Deploy to Stage') {
+         stage('Deploy to Stage') {
             steps {
                 script {
                     // Stage environment set on ec2 instance
@@ -69,7 +69,7 @@ pipeline {
                                 docker pull ahershiv/to-do-node-app
                                 docker stop to-do-node-app || true
                                 docker rm to-do-node-app || true
-                                docker run -d -p 3000:3000 --name to-do-node-app ahershiv/to-do-node-app
+                                docker run -d -p 8000:8000 --name to-do-node-app ahershiv/to-do-node-app
                             EOF
                         """
                     }
