@@ -1,9 +1,14 @@
 //declarative pipeline
 
 pipeline {
-    agent any
-
-    stages {
+  agent any
+    options {
+    buildDiscarder(logRotator(numToKeepStr: '5'))
+    }
+    environment {
+     DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+    }
+     stages {
         stage('Checkout') {
             steps {
                 script {
@@ -26,10 +31,22 @@ pipeline {
             steps {
                 script {
                     // Build the application using docker image
-                    sh 'docker build . -t to-do-node-app'
+                    sh 'docker build . -t ahershiv/to-do-node-app'
                 }
             }
         }
+
+        stage('Login') {
+      steps {
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'      
+         }        
+        }
+        
+        stage('Push') {
+      steps {
+        sh 'docker push ahershiv/to-do-node-app'
+        }
+       }
 
         stage('Run Tests') {
             steps {
