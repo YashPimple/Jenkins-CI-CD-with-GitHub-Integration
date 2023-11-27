@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     // Install Node.js dependencies
-                    sh 'npm install'
+                    sh 'npm install --save-dev mocha chai'
                 }
             }
         }
@@ -25,8 +25,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build the application (adjust as needed)
-                    sh 'npm run build'
+                    // Build the application using docker image
+                    sh 'docker build . -t to-do-node-app'
                 }
             }
         }
@@ -40,14 +40,14 @@ pipeline {
             }
         }
 
-        stage('Package') {
+     /*   stage('Package') {
             steps {
                 script {
                     // Package the application
-                    sh 'npm run package'
+                    sh ''
                 }
             }
-        }
+        }    */
     }
 
     post {
